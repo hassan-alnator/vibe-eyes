@@ -27,9 +27,11 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "serve:example": "cd example-app && python3 -m http.server 8080"
+    "serve:example": "cd example-app && python3 -m http.server 8080",
+    "postinstall": "playwright install chromium"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.5",

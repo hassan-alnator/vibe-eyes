@@ -30,11 +30,14 @@ jobs:
     - name: Install dependencies
       run: pnpm install
     
+    - name: Install Playwright browsers
+      run: npx playwright install chromium
+    
     - name: Build
       run: pnpm build
     
     - name: Run tests
-      run: pnpm test --run
+      run: pnpm test
     
     - name: Type check
       run: npx tsc --noEmit

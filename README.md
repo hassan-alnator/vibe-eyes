@@ -1,6 +1,10 @@
+![Eyes MCP Server](./docs/assets/header.jpg)
+
 # Eyes MCP Server - Automated Visual Testing Framework
 
 A Model Context Protocol (MCP) server that provides comprehensive automated testing capabilities including unit test generation, end-to-end testing with Playwright, visual regression testing, and OCR-based text validation.
+
+A humble attempt to bridge the gap between traditional testing and AI-powered visual testing and make vibe coding more enjoyable.
 
 ## Overview
 
@@ -34,6 +38,9 @@ pnpm install
 
 # Build the TypeScript code
 pnpm build
+
+# Install Playwright browsers (required for E2E testing)
+npx playwright install chromium
 
 # Add to Claude using the MCP CLI
 claude mcp add eyes node $(pwd)/dist/index.js
