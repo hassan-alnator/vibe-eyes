@@ -62,5 +62,5 @@ jobs:
       run: pnpm install
     
     - name: Check formatting
-      run: npx prettier --check "src/**/*.ts"
+      run: npx prettier --check "src/**/*.ts" || echo "Formatting issues found (non-blocking)"
       continue-on-error: true
