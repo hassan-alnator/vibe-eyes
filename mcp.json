@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "eyes": {
+      "command": "node",
+      "args": ["--experimental-modules", "dist/index.js"],
+      "env": {
+        "OLLAMA_HOST": "http://127.0.0.1:11434"
+      }
+    }
+  }
+}

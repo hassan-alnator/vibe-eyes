@@ -1,0 +1,49 @@
+{
+  "name": "eyes-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for automated testing with visual regression and OCR",
+  "type": "module",
+  "author": "Hasan Alnatour",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hassan-alnator/eyes-mcp-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hassan-alnator/eyes-mcp-server/issues"
+  },
+  "homepage": "https://github.com/hassan-alnator/eyes-mcp-server#readme",
+  "keywords": [
+    "mcp",
+    "testing",
+    "visual-regression",
+    "ocr",
+    "playwright",
+    "vitest",
+    "automation",
+    "claude",
+    "ai"
+  ],
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "test": "vitest",
+    "test:e2e": "playwright test",
+    "serve:example": "cd example-app && python3 -m http.server 8080"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.5",
+    "playwright": "^1.49.0",
+    "tesseract.js": "^5.1.1",
+    "pixelmatch": "^6.0.0",
+    "pngjs": "^7.0.0",
+    "vitest": "^2.1.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/pixelmatch": "^5.2.6",
+    "@types/pngjs": "^6.0.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

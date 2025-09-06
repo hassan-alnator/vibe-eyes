@@ -1,0 +1,32 @@
+# Source files
+src/
+*.ts
+!*.d.ts
+
+# Development files
+.github/
+docs/
+examples/
+example-app/
+baselines/
+.artifacts/
+
+# Config files
+tsconfig.json
+.gitignore
+.npmignore
+pnpm-lock.yaml
+
+# Test files
+*.test.ts
+*.test.js
+coverage/
+test/
+__tests__/
+
+# Misc
+*.log
+.DS_Store
+.env*
+*.tmp
+*.traineddata

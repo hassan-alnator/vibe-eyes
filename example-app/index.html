@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example Test App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            width: 90%;
+            max-width: 400px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .error {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        .error.show {
+            display: block;
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .success-message {
+            display: none;
+            background: #2ecc71;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .success-message.show {
+            display: block;
+        }
+        .dashboard {
+            display: none;
+        }
+        .dashboard.show {
+            display: block;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .lang-switcher {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .lang-switcher button {
+            background: none;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .lang-switcher button.active {
+            background: #667eea;
+            color: white;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="ar">AR</button>
+    </div>
+
+    <div class="container">
+        <div id="login-form" class="login-form">
+            <h1 id="title">Welcome Back</h1>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email" id="email-label">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email">
+                    <div class="error" id="email-error">Please enter a valid email address</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" id="password-label">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password">
+                    <div class="error" id="password-error">Password must be at least 6 characters</div>
+                </div>
+                
+                <button type="submit" class="btn" id="login-button">Sign In</button>
+            </form>
+            
+            <div class="success-message" id="success-message">
+                Login successful! Redirecting to dashboard...
+            </div>
+        </div>
+
+        <div id="dashboard" class="dashboard">
+            <h1 id="dashboard-title">Dashboard</h1>
+            <p id="welcome-message">Welcome back, user@example.com</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">1,234</div>
+                    <div class="stat-label" id="visits-label">Total Visits</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">89%</div>
+                    <div class="stat-label" id="rate-label">Success Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">456</div>
+                    <div class="stat-label" id="users-label">Active Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$12.5k</div>
+                    <div class="stat-label" id="revenue-label">Revenue</div>
+                </div>
+            </div>
+            
+            <button class="btn" id="logout-button" style="margin-top: 20px;">Sign Out</button>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                title: "Welcome Back",
+                emailLabel: "Email Address",
+                passwordLabel: "Password",
+                loginButton: "Sign In",
+                emailError: "Please enter a valid email address",
+                passwordError: "Password must be at least 6 characters",
+                successMessage: "Login successful! Redirecting to dashboard...",
+                dashboardTitle: "Dashboard",
+                welcomeMessage: "Welcome back,",
+                visitsLabel: "Total Visits",
+                rateLabel: "Success Rate",
+                usersLabel: "Active Users",
+                revenueLabel: "Revenue",
+                logoutButton: "Sign Out"
+            },
+            ar: {
+                title: "مرحبا بعودتك",
+                emailLabel: "البريد الإلكتروني",
+                passwordLabel: "كلمة المرور",
+                loginButton: "تسجيل الدخول",
+                emailError: "يرجى إدخال بريد إلكتروني صالح",
+                passwordError: "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+                successMessage: "تم تسجيل الدخول بنجاح! جاري التحويل...",
+                dashboardTitle: "لوحة التحكم",
+                welcomeMessage: "مرحبا بعودتك،",
+                visitsLabel: "إجمالي الزيارات",
+                rateLabel: "معدل النجاح",
+                usersLabel: "المستخدمون النشطون",
+                revenueLabel: "الإيرادات",
+                logoutButton: "تسجيل الخروج"
+            }
+        };
+
+        let currentLang = 'en';
+
+        // Language switcher
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentLang = e.target.dataset.lang;
+                updateLanguage();
+            });
+        });
+
+        function updateLanguage() {
+            const t = translations[currentLang];
+            document.getElementById('title').textContent = t.title;
+            document.getElementById('email-label').textContent = t.emailLabel;
+            document.getElementById('password-label').textContent = t.passwordLabel;
+            document.getElementById('login-button').textContent = t.loginButton;
+            document.getElementById('email-error').textContent = t.emailError;
+            document.getElementById('password-error').textContent = t.passwordError;
+            document.getElementById('success-message').textContent = t.successMessage;
+            document.getElementById('dashboard-title').textContent = t.dashboardTitle;
+            document.getElementById('visits-label').textContent = t.visitsLabel;
+            document.getElementById('rate-label').textContent = t.rateLabel;
+            document.getElementById('users-label').textContent = t.usersLabel;
+            document.getElementById('revenue-label').textContent = t.revenueLabel;
+            document.getElementById('logout-button').textContent = t.logoutButton;
+            
+            // RTL support for Arabic
+            document.body.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+        }
+
+        // Form validation
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            let isValid = true;
+            
+            // Reset errors
+            document.querySelectorAll('.error').forEach(err => err.classList.remove('show'));
+            
+            // Validate email
+            if (!email || !email.includes('@')) {
+                document.getElementById('email-error').classList.add('show');
+                isValid = false;
+            }
+            
+            // Validate password
+            if (!password || password.length < 6) {
+                document.getElementById('password-error').classList.add('show');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Show success message
+                document.getElementById('success-message').classList.add('show');
+                
+                // Simulate login delay
+                setTimeout(() => {
+                    document.getElementById('login-form').style.display = 'none';
+                    document.getElementById('dashboard').classList.add('show');
+                    document.getElementById('welcome-message').textContent = 
+                        translations[currentLang].welcomeMessage + ' ' + email;
+                }, 2000);
+            }
+        });
+
+        // Logout
+        document.getElementById('logout-button').addEventListener('click', () => {
+            document.getElementById('dashboard').classList.remove('show');
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('success-message').classList.remove('show');
+            document.getElementById('loginForm').reset();
+        });
+    </script>
+</body>
+</html>

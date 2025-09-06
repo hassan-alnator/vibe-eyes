@@ -1,0 +1,305 @@
+{
+  "scenarios": [
+    {
+      "name": "login-validation",
+      "description": "Test login form validation and error messages",
+      "baseUrl": "http://localhost:8080",
+      "steps": [
+        {
+          "action": "navigate",
+          "value": "/example-app/index.html"
+        },
+        {
+          "action": "screenshot",
+          "name": "login-initial",
+          "assertions": [
+            {
+              "kind": "element",
+              "selector": "#email"
+            },
+            {
+              "kind": "element",
+              "selector": "#password"
+            },
+            {
+              "kind": "ocr",
+              "expected": "Welcome Back"
+            },
+            {
+              "kind": "vlm-eval",
+              "prompt": "Is there a login form with email and password fields and a sign in button visible?",
+              "passIf": "YES"
+            }
+          ]
+        },
+        {
+          "action": "click",
+          "selector": "#login-button",
+          "assertions": [
+            {
+              "kind": "text",
+              "expected": "Please enter a valid email address"
+            }
+          ]
+        },
+        {
+          "action": "screenshot",
+          "name": "login-empty-validation",
+          "assertions": [
+            {
+              "kind": "ocr",
+              "expected": "Please enter a valid email address"
+            },
+            {
+              "kind": "vlm-eval",
+              "prompt": "Are there error messages displayed below the form fields?",
+              "passIf": "YES"
+            }
+          ]
+        },
+        {
+          "action": "type",
+          "selector": "#email",
+          "value": "invalid-email"
+        },
+        {
+          "action": "type",
+          "selector": "#password",
+          "value": "123"
+        },
+        {
+          "action": "click",
+          "selector": "#login-button"
+        },
+        {
+          "action": "screenshot",
+          "name": "login-invalid-validation",
+          "assertions": [
+            {
+              "kind": "ocr",
+              "expected": "valid email"
+            },
+            {
+              "kind": "ocr",
+              "expected": "6 characters"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "successful-login-flow",
+      "description": "Test successful login and dashboard display",
+      "baseUrl": "http://localhost:8080",
+      "steps": [
+        {
+          "action": "navigate",
+          "value": "/example-app/index.html"
+        },
+        {
+          "action": "type",
+          "selector": "#email",
+          "value": "test@example.com"
+        },
+        {
+          "action": "type",
+          "selector": "#password",
+          "value": "password123"
+        },
+        {
+          "action": "screenshot",
+          "name": "login-filled"
+        },
+        {
+          "action": "click",
+          "selector": "#login-button"
+        },
+        {
+          "action": "wait",
+          "value": "500"
+        },
+        {
+          "action": "screenshot",
+          "name": "login-success-message",
+          "assertions": [
+            {
+              "kind": "ocr",
+              "expected": "Login successful"
+            },
+            {
+              "kind": "vlm-eval",
+              "prompt": "Is there a green success message displayed?",
+              "passIf": "YES"
+            }
+          ]
+        },
+        {
+          "action": "wait",
+          "value": "2500"
+        },
+        {
+          "action": "screenshot",
+          "name": "dashboard-view",
+          "assertions": [
+            {
+              "kind": "text",
+              "expected": "Dashboard"
+            },
+            {
+              "kind": "ocr",
+              "expected": "Welcome back"
+            },
+            {
+              "kind": "ocr",
+              "expected": "test@example.com"
+            },
+            {
+              "kind": "vlm-eval",
+              "prompt": "Is there a dashboard with 4 stat cards showing metrics like visits, success rate, users, and revenue?",
+              "passIf": "YES"
+            },
+            {
+              "kind": "visual-diff"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "language-switching",
+      "description": "Test multi-language support (English to Arabic)",
+      "baseUrl": "http://localhost:8080",
+      "steps": [
+        {
+          "action": "navigate",
+          "value": "/example-app/index.html"
+        },
+        {
+          "action": "screenshot",
+          "name": "english-interface",
+          "assertions": [
+            {
+              "kind": "ocr",
+              "expected": "Welcome Back"
+            },
+            {
+              "kind": "vlm-eval",
+              "prompt": "Is the text aligned left-to-right and in English?",
+              "passIf": "YES"
+            }
+          ]
+        },
+        {
+          "action": "click",
+          "selector": "[data-lang='ar']"
+        },
+        {
+          "action": "wait",
+          "value": "500"
+        },
+        {
+          "action": "screenshot",
+          "name": "arabic-interface",
+          "assertions": [
+            {
+              "kind": "ocr",
+              "expected": "مرحبا بعودتك",
+              "languages": ["ara"]
+            },
+            {
+              "kind": "vlm-eval",
+              "prompt": "Is the interface now in Arabic with right-to-left text alignment?",
+              "passIf": "YES"
+            }
+          ]
+        },
+        {
+          "action": "type",
+          "selector": "#email",
+          "value": "arabic@test.com"
+        },
+        {
+          "action": "type",
+          "selector": "#password",
+          "value": "test123"
+        },
+        {
+          "action": "click",
+          "selector": "#login-button"
+        },
+        {
+          "action": "wait",
+          "value": "2500"
+        },
+        {
+          "action": "screenshot",
+          "name": "arabic-dashboard",
+          "assertions": [
+            {
+              "kind": "ocr",
+              "expected": "لوحة التحكم",
+              "languages": ["ara"]
+            },
+            {
+              "kind": "vlm-eval",
+              "prompt": "Is the dashboard displayed in Arabic with RTL layout and Arabic numerals?",
+              "passIf": "YES"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "visual-regression-check",
+      "description": "Check for visual regressions in key screens",
+      "baseUrl": "http://localhost:8080",
+      "steps": [
+        {
+          "action": "navigate",
+          "value": "/example-app/index.html"
+        },
+        {
+          "action": "screenshot",
+          "name": "baseline-login",
+          "assertions": [
+            {
+              "kind": "visual-diff"
+            }
+          ]
+        },
+        {
+          "action": "type",
+          "selector": "#email",
+          "value": "visual@test.com"
+        },
+        {
+          "action": "type",
+          "selector": "#password",
+          "value": "testpass"
+        },
+        {
+          "action": "click",
+          "selector": "#login-button"
+        },
+        {
+          "action": "wait",
+          "value": "2500"
+        },
+        {
+          "action": "screenshot",
+          "name": "baseline-dashboard",
+          "assertions": [
+            {
+              "kind": "visual-diff"
+            },
+            {
+              "kind": "vlm-eval",
+              "prompt": "Does the dashboard layout look complete with proper spacing, no overlapping elements, and good visual hierarchy?",
+              "passIf": "YES"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
