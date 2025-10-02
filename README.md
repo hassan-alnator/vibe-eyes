@@ -14,12 +14,14 @@ Eyes MCP Server enables AI assistants like Claude to perform sophisticated testi
 
 ### Test Generation and Execution
 - **Automatic unit test generation** for TypeScript/JavaScript codebases using Vitest
-- **End-to-end testing** with Playwright browser automation
+- **End-to-end testing** with Playwright browser automation (supports attended mode for visual debugging)
 - **Visual regression testing** comparing screenshots against baseline images
 - **OCR text extraction** for validating text in images and screenshots
 - **HTML report generation** with embedded screenshots and metrics
 
 ### Advanced Features
+- **Attended mode** for visual test debugging - watch tests run in a real browser window
+- **Sub-agent integration** - Automatic testing after code changes with Claude Code
 - **Retry mechanism** for handling flaky tests
 - **Performance tracking** with execution time metrics
 - **Automatic baseline generation** on first run
@@ -45,6 +47,27 @@ npx playwright install chromium
 # Add to Claude using the MCP CLI
 claude mcp add eyes node $(pwd)/dist/index.js
 ```
+
+## 🤖 Automatic Testing with Sub-Agent
+
+This project includes a pre-configured testing sub-agent that automatically tests your code changes. The agent is located at `.claude/agents/eyes-tester.md` and:
+
+- **Runs automatically** after code changes
+- **Uses attended mode by default** for visibility (browser attempts to open)
+- **Selects appropriate tests** based on what changed
+- **Generates comprehensive reports**
+
+### Using the Sub-Agent
+
+```javascript
+// Claude will automatically invoke after changes:
+Task(subagent_type="eyes-tester", prompt="Test the recent changes")
+
+// The agent defaults to attended mode for better visibility
+// Note: Due to MCP limitations, browser may run in background
+```
+
+For detailed setup instructions, see [Sub-Agent Setup Guide](docs/SUBAGENT_SETUP.md).
 
 ## Configuration for Claude Code
 
@@ -85,6 +108,7 @@ Performs end-to-end testing with Playwright, capturing screenshots and validatin
 
 **Parameters:**
 - `baseUrl` (string, required): Base URL of application
+- `attendedMode` (boolean, optional): Run browser in visible mode instead of headless (default: false)
 - `steps` (array, required): Test steps to execute
 
 **Step Actions:**
@@ -124,6 +148,67 @@ Creates an interactive HTML report with embedded screenshots.
 **Parameters:**
 - `reportPath` (string): Path to JSON report
 - `outputPath` (string): Path for HTML output
+
+## Attended Mode (Visual Testing)
+
+### Important Note for MCP Server Context
+⚠️ **MCP Server Limitation**: When running through the MCP server (via Claude), the browser runs in a background service context and may not appear on screen even in attended mode. This is a fundamental limitation of how MCP servers work.
+
+**Solution**: Use the standalone script `run-attended-test.js` to see the browser in action:
+
+```bash
+node run-attended-test.js
+```
+
+### Running Tests with Attended Mode
+
+When using the MCP server tools, you can still enable attended mode (useful for slower execution and debugging):
+
+```json
+{
+  "tool": "run_e2e",
+  "args": {
+    "baseUrl": "http://localhost:3000",
+    "attendedMode": true,  // Browser window will be visible
+    "steps": [
+      {
+        "action": "navigate",
+        "value": "/"
+      },
+      {
+        "action": "click",
+        "selector": "#login-button"
+      },
+      {
+        "action": "screenshot",
+        "name": "login-page"
+      }
+    ]
+  }
+}
+```
+
+When attended mode is enabled:
+- Browser window opens and stays visible
+- Actions are slowed down by 500ms for better visibility
+- Perfect for debugging test failures
+- Useful for demonstrating test coverage to stakeholders
+
+## Sub-Agent for Automatic Testing
+
+Eyes MCP Server includes a specialized sub-agent (`eyes-tester`) that automatically runs tests after code changes. When using Claude Code:
+
+1. The sub-agent is pre-configured in `.claude/agents/eyes-tester.md`
+2. After making code changes, Claude will automatically invoke the testing agent
+3. Tests run based on the type of changes detected:
+   - UI changes trigger visual regression tests
+   - Logic changes trigger unit tests
+   - Configuration changes trigger smoke tests
+
+Example of manual invocation:
+```
+Task(subagent_type="eyes-tester", prompt="Test the recent changes to the login component")
+```
 
 ## Real-World Example
 

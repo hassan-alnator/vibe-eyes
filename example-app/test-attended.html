@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Attended Mode Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .demo-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        input {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 16px;
+            width: 100%;
+            margin: 10px 0;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .message {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+            display: none;
+        }
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .visible {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Eyes MCP - Attended Mode Demo</h1>
+
+        <div class="demo-section">
+            <h2>Interactive Elements</h2>
+            <p>This page demonstrates various interactive elements for testing with attended mode.</p>
+
+            <button id="demo-button" onclick="showMessage()">Click Me!</button>
+
+            <div id="success-message" class="message success">
+                Button clicked successfully! You're watching the test in attended mode.
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>Form Validation</h2>
+            <form id="demo-form" onsubmit="validateForm(event)">
+                <input type="text" id="username" placeholder="Enter username" required>
+                <input type="email" id="email" placeholder="Enter email" required>
+                <button type="submit">Submit Form</button>
+            </form>
+
+            <div id="form-message" class="message">
+                Form submitted successfully!
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>Dynamic Content</h2>
+            <button onclick="loadDynamicContent()">Load Dynamic Content</button>
+            <div id="dynamic-content"></div>
+        </div>
+    </div>
+
+    <script>
+        function showMessage() {
+            const message = document.getElementById('success-message');
+            message.classList.add('visible');
+            setTimeout(() => {
+                message.classList.remove('visible');
+            }, 3000);
+        }
+
+        function validateForm(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('form-message');
+
+            if (username && email) {
+                message.className = 'message success visible';
+                message.textContent = `Form submitted! Username: ${username}, Email: ${email}`;
+            } else {
+                message.className = 'message error visible';
+                message.textContent = 'Please fill in all fields';
+            }
+        }
+
+        function loadDynamicContent() {
+            const content = document.getElementById('dynamic-content');
+            content.innerHTML = `
+                <div style="margin-top: 20px; padding: 20px; background: #e3f2fd; border-radius: 6px;">
+                    <h3>Dynamic Content Loaded!</h3>
+                    <p>Timestamp: ${new Date().toLocaleString()}</p>
+                    <p>This content was loaded dynamically and can be tested with OCR validation.</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

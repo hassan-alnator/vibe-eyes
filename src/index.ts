@@ -72,6 +72,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               type: "string",
               description: "Base URL of the application to test",
             },
+            attendedMode: {
+              type: "boolean",
+              description: "Run browser in attended mode (visible browser window) instead of headless",
+            },
             steps: {
               type: "array",
               description: "Array of test steps to execute",

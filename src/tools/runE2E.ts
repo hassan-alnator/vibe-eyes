@@ -5,6 +5,7 @@ import { join } from "node:path";
 interface E2EArgs {
   baseUrl: string;
   steps: TestStep[];
+  attendedMode?: boolean;
 }
 
 interface TestStep {
@@ -42,17 +43,45 @@ interface AssertionResult {
 }
 
 export async function runE2E(args: E2EArgs) {
-  const { baseUrl, steps } = args;
+  const { baseUrl, steps, attendedMode = false } = args;
   let browser: Browser | null = null;
   let page: Page | null = null;
-  
+
   try {
     await mkdir('.artifacts/screenshots', { recursive: true });
-    
-    browser = await chromium.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
+
+    // For attended mode, we need to ensure the browser is visible
+    const launchOptions: any = {
+      headless: !attendedMode,
+      slowMo: attendedMode ? 500 : 0,
+    };
+
+    if (attendedMode) {
+      console.error('⚠️  ATTENDED MODE: Browser window will open...');
+      console.error('⚠️  NOTE: Due to MCP server context, browser may open in background.');
+      console.error('⚠️  You may need to switch to the browser window manually.');
+
+      // Force non-headless mode with specific flags
+      launchOptions.headless = false;
+      launchOptions.args = [
+        '--auto-open-devtools-for-tabs=false',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-renderer-backgrounding',
+        '--force-color-profile=srgb'
+      ];
+
+      // On macOS, try to bring browser to front
+      if (process.platform === 'darwin') {
+        launchOptions.args.push('--enable-logging');
+      }
+    } else {
+      // Headless mode args
+      launchOptions.args = ['--no-sandbox', '--disable-setuid-sandbox'];
+    }
+
+    console.error(`Launching browser in ${attendedMode ? 'ATTENDED' : 'HEADLESS'} mode...`);
+
+    browser = await chromium.launch(launchOptions);
     
     page = await browser.newPage();
     await page.setViewportSize({ width: 1280, height: 720 });
@@ -195,6 +224,7 @@ export async function runE2E(args: E2EArgs) {
       totalSteps: steps.length,
       executedSteps: results.length,
       results,
+      attendedMode,
       timestamp: new Date().toISOString()
     };
     
